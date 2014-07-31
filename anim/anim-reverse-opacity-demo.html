@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Example: Reversing Easing Effects on Opacity - YUI Library</title>
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,700,400italic,700italic">
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.0/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="combo/main-min.css">
+    <link rel="stylesheet" href="combo/prettify-min.css">
+    <link rel="stylesheet" href="combo/docs-min.css">
+    <link rel="stylesheet" href="combo/anim.css">
+
+    <script src="http://yui.yahooapis.com/3.17.2/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div style="min-width : 960px; padding : 20px; position: relative; width: 99%">
+<p>This demo is based on the <a href="https://yuilibrary.com/yui/docs/anim/reverse.html">YUI library's demo for reversing an animation</a>.</p>
+
+<div id="demo" class="yui3-module" style="opacity: 1">
+    <div class="yui3-hd">
+        <h3>Reversing an Animation to change Opacity</h3>
+    </div>
+    <div class="yui3-bd" style="opacity: 1 ">
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+    </div>
+</div>
+<p>This is placeholder text used to demonstrate how the above animation affects subsequent content.</p> 
+<div id="widget" class="yui3-module">
+    <a title="collapse element" class="yui3-toggle"><span id="instruction" style="border-style: solid; padding: 3px">click to hide lorem ipsum</span></a> Opacity of the element: <span id="display">?</span>
+
+    <p><b>On the initial click, the opacity of the lorem element appears to get reset to 0, and then it fades in to 1. I do not understand this! It works fine after this initial click.<b></p>
+</div>
+
+
+<script type="text/javascript">
+YUI().use('anim', function(Y) {
+    var module = Y.one('#demo');
+    var lorem = module.one('.yui3-bd');
+
+    // add fx plugin to module body
+    var content = module.one('.yui3-bd').plug(Y.Plugin.NodeFX, {
+        from: { opacity: '1' },
+        to: { opacity : '0' },
+        easing: Y.Easing.easeOut,
+        duration: 2
+    });
+
+    var onClick = function(e) {
+        e.preventDefault();
+        Y.one('#display').set('text', lorem.getStyle('opacity'));
+        content.fx.set('reverse', !content.fx.get('reverse')); // toggle reverse 
+        content.fx.run();
+    };
+
+    var onEnd = function(e) {
+        Y.one('#display').set('text', lorem.getStyle('opacity'));
+        Y.one('#instruction').set('text', content.fx.get('reverse') ? 'click to show lorem ipsum' : 'click to hide lorem ipsum');
+    };
+
+    content.fx.on('end', onEnd);
+
+    var control = Y.one('.yui3-toggle');
+    control.on('click', onClick);
+    
+    onEnd();
+});
+</script>
